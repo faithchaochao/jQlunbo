@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        
+        #banner {
+            position: relative;
+            margin: 0px auto;
+            list-style: none;
+            position: absolute;
+            transition: all 1s;
+        }
+        
+        #banner li {
+            float: left;
+            width: 730px;
+            height: 454px;
+        }
+        
+        #round {
+            width: 730px;
+            list-style: none;
+            position: relative;
+            top: 400px;
+            left: 290px;
+        }
+        
+        #round li {
+            float: left;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #000;
+            color: #fff;
+            line-height: 26px;
+            text-align: center;
+            margin-left: 7px;
+            margin-right: 7px;
+            cursor: pointer;
+        }
+        
+        #wrap {
+            margin: 0px auto;
+            width: 730px;
+            height: 454px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        #left {
+            position: absolute;
+            height: 454px;
+            left: 0px;
+            opacity: 0.8;
+        }
+        
+        #right {
+            position: absolute;
+            height: 454px;
+            right: 0px;
+            opacity: 0.8;
+        }
+        
+        a {
+            text-decoration: none;
+            display: inline-block;
+            width: 76px;
+            height: 109px;
+            margin-top: 180px;
+            box-shadow: 6px 6px 6px 6px #666;
+            border-radius: 5px;
+        }
+        
+        #left a {
+            background: url(images/a.png);
+        }
+        
+        #right a {
+            background: url(images/b.png);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <ul id="banner">
+        </ul>
+        <ul id="round">
+        </ul>
+        <div id="left">
+            <a href="#" style="display:none"></a>
+        </div>
+        <div id="right">
+            <a href="#" style="display:none"></a>
+        </div>
+
+    </div>
+</body>
+
+
+<script type="text/javascript" src="${pageContext.request.contextPath}">
+    var ArrImg = ["images/1.jpg", "images/2.jpg", "images/3.jpg", "images/4.jpg", "images/5.jpg"];
+    var num = ArrImg.length;
+
+    for (var i = 0; i < ArrImg.length; i++) {
+        $("<li/>").css("background", "url(" + ArrImg[i] + ")").appendTo($("#banner"));
+        $("<li/>").html(i + 1).appendTo($("#round"));
+    }
+
+    $("#banner").css("width", $("#banner li:eq(1)").width() * (ArrImg.length) + "px");
+
+
+    var Liw = $("#banner li").width();
+    var bannerW = $("#banner").width();
+    var index = 0;
+
+
+    function move(index) {
+        $("#banner").css("left", -Liw * index);
+        $("#round li").css("background", "#000");
+        $("#round li").eq(index).css("background", "red");
+    }
+
+    var time1 = setInterval(changeImg, 1500);
+
+    function changeImg() {
+        move(index)
+        if (index == 4) {
+            index = -1;
+        }
+        index++;
+    }
+
+    $("#round li").on('mouseenter', function() {
+        index = $(this).index();
+        clearInterval(time1);
+        move(index)
+    })
+    $("#round li").on('mouseout', function() {
+        time1 = setInterval(changeImg, 1500);
+    })
+
+    $("#wrap").on('mouseenter', function() {
+        $("#right a").add("#left a").css("display", "block");
+    }).on('mouseleave', function() {
+        $("#right a").add("#left a").css("display", "none");
+    })
+
+    $("#left a").add($("#right a")).hover(function() {
+        clearInterval(time1);
+    }, function() {
+        time1 = setInterval(changeImg, 1500);
+    });
+
+    $("#right a").on('click', function() {
+        clearInterval(time1);
+        index = ((++index) % 5);
+        move(index)
+    });
+    $("#left a").on('click', function() {
+        clearInterval(time1);
+        index = ((5 + --index) % 5);
+        move(index)
+    });
+</script>
+
+</html>
